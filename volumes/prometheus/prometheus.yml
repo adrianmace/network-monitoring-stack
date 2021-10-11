@@ -1,0 +1,100 @@
+global:
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+scrape_configs:
+  - job_name: 'blackbox'
+    scrape_interval: 10s
+    scrape_timeout: 2s
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+        - '45.90.28.0' # NextDNS Primary 
+        - '45.90.30.0' # NextDNS Secondary
+        - '1.1.1.1' # Cloudflare Primary
+        - '1.0.0.1' # Cloudflare Secondary
+        - '9.9.9.11' # Quad9 EDNS Primary
+        - '149.112.112.11' # Quad9 EDNS Secondary
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: {{HOST_IP}}:9115
+  - job_name: 'alexatopsites'
+    scrape_interval: 30s
+    scrape_timeout: 2s
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+        - google.com
+        - youtube.com
+        - facebook.com
+        - google.com.au
+        - live.com
+        - office.com
+        - reddit.com
+        - yahoo.com
+        - wikipedia.org
+        - amazon.com.au
+        - amazon.com
+        - realestate.com.au
+        - aliexpress.com
+        - instagram.com
+        - nsw.gov.au
+        - commbank.com.au
+        - news.com.au
+        - auspost.com.au
+        - alibaba.com
+        - force.com
+        - xero.com
+        - twitch.tv
+        - pinterest.com.au
+        - etsy.com
+        - canva.com
+        - linkedin.com
+        - coinspot.com.au
+        - westpac.com.au
+        - gumtree.com.au
+        - twitter.com
+        - apple.com
+        - adobe.com
+        - paypal.com
+        - tradingview.com
+        - smh.com.au
+        - kmart.com.au
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: {{HOST_IP}}:9115
+  - job_name: 'gsl'
+    scrape_interval: 10s
+    scrape_timeout: 2s
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+        - '116.90.73.226' # GSL Adelaide
+        - '103.62.50.13' # GSL Brisbane
+        - '45.121.209.85' # GSL Melbourne
+        - '45.121.208.27' # GSL Perth
+        - '103.212.226.12' # GSL Sydney
+        - '103.62.49.18' # GSL Auckland
+        - '103.62.48.4' # GSL Singapore
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: {{HOST_IP}}:9115
+

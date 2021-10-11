@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    user: "1000"
+    ports:
+      - 3000
+    volumes:
+      - ./volumes/grafana/grafana:/var/lib/grafana
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    restart: always
+    network_mode: host
+    volumes:
+      - ./volumes/blackbox-exporter/blackbox.yml:/etc/blackbox_exporter/config.yml
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    ports:
+      - 9090
+    volumes:
+      - ./volumes/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./volumes/prometheus/data:/prometheus
+    command:
+      - "--storage.tsdb.retention.time=31d"
+      - "--config.file=/etc/prometheus/prometheus.yml"
